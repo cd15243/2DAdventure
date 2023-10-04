@@ -493,6 +493,9 @@ GameObject:
   - component: {fileID: 527248689}
   - component: {fileID: 527248690}
   - component: {fileID: 527248691}
+  - component: {fileID: 527248692}
+  - component: {fileID: 527248693}
+  - component: {fileID: 527248694}
   m_Layer: 8
   m_Name: Boar
   m_TagString: Untagged
@@ -560,7 +563,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 527248684}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.36, y: -2.53, z: 0}
+  m_LocalPosition: {x: 5.36, y: -2.96, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -671,8 +674,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.26198623, y: 0.59987617}
-  m_Size: {x: 1.8663347, y: 1.199766}
+  m_Offset: {x: -0.19878455, y: 0.59987617}
+  m_Size: {x: 1.9927423, y: 1.199766}
   m_Direction: 1
 --- !u!114 &527248690
 MonoBehaviour:
@@ -686,16 +689,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b4d3b775a16f6a40a70b1890b35c1cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 50
+  maxHealth: 18
   currentHealth: 0
   invincibleDuration: 1
   isInvincible: 0
   OnTakeDamage:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 527248692}
+        m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
+        m_MethodName: OnTakeDamage
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnDead:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 527248692}
+        m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
+        m_MethodName: OnDead
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &527248691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -711,6 +738,83 @@ MonoBehaviour:
   damage: 5
   attackRange: 0
   attackRate: 0
+--- !u!114 &527248692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527248684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cd7b85877e86a046a353f313a38db0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 0}
+  physicsCheck: {fileID: 0}
+  normalSpeed: 100
+  chaseSpeed: 260
+  currentSpeed: 0
+  faceDir: {x: 0, y: 0, z: 0}
+  attacker: {fileID: 0}
+  hurtForce: 4.5
+  centerOffset: {x: 0, y: 0.65}
+  checkSize: {x: 1, y: 1}
+  checkDistance: 4.5
+  attackLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  waitTime: 2
+  waitCounter: 0
+  wait: 0
+  isHurt: 0
+  isDead: 0
+  lostTime: 3
+  lostTimeCounter: 0
+--- !u!95 &527248693
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527248684}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 74d37eb641b8f8043981afce6d32ad6e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &527248694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527248684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b93642ce1100fe4b8025d6fe23cb690, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGround: 0
+  leftOffset: {x: -1.2, y: 0.58}
+  rightOffset: {x: 0.82, y: 0.58}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  bottomOffset: {x: -0.85, y: 0}
+  manual: 1
+  checkRaduis: 0.1
+  isTouchLeftWall: 0
+  isTouchRightWall: 0
 --- !u!1 &559222759
 GameObject:
   m_ObjectHideFlags: 0
@@ -2635,7 +2739,7 @@ CompositeCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
+  m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths:
@@ -3367,11 +3471,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isGround: 0
+  leftOffset: {x: -0.45, y: 0.94}
+  rightOffset: {x: 0.33, y: 0.94}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
   bottomOffset: {x: -0.05, y: 0}
-  checkRadius: 0.2
+  manual: 0
+  checkRaduis: 0.1
+  isTouchLeftWall: 0
+  isTouchRightWall: 0
 --- !u!95 &1038405434
 Animator:
   serializedVersion: 5

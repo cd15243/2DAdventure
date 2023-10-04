@@ -125,7 +125,9 @@ public class PlayerController : MonoBehaviour
 
     private void PlayerAttack(InputAction.CallbackContext context)
     {
-        Debug.Log("Attack");
+        if(!physicsCheck.isGround){
+            return;
+        }
         playerAnimation.PlayAttack();
         isAttack = true;
     }
