@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private CapsuleCollider2D capsuleCollider2D;
     private PhysicsCheck physicsCheck;
+    private PlayerAnimation playerAnimation;
     public Vector2 inputDirection;
     [Header("基本参数")]
     public float speed;
@@ -18,15 +19,20 @@ public class PlayerController : MonoBehaviour
     public bool isCrouch;
     public bool isHurt;
     public bool isDead;
+    public bool isAttack;
     public float hurtForce;
     private Vector2 originalOffset;
     private Vector2 originalSize;
+
+    public PhysicsMaterial2D normal;
+    public PhysicsMaterial2D wall;
 
     private void Awake() {
         rb = GetComponent<Rigidbody2D>();
         physicsCheck = GetComponent<PhysicsCheck>();
         inputControl = new PlayerInputControl();
         capsuleCollider2D = GetComponent<CapsuleCollider2D>();
+        playerAnimation = GetComponent<PlayerAnimation>();
         originalOffset = capsuleCollider2D.offset;
         originalSize = capsuleCollider2D.size;
 
@@ -45,9 +51,9 @@ public class PlayerController : MonoBehaviour
             }
         };
 #endregion
+    
+        inputControl.Gameplay.Attack.started += PlayerAttack;
     }
-
-
 
     private void OnEnable() {
         inputControl.Enable();
@@ -55,10 +61,12 @@ public class PlayerController : MonoBehaviour
 
     private void Update() {
         inputDirection = inputControl.Gameplay.Move.ReadValue<Vector2>();
+
+        CheckState();
     }
 
     private void FixedUpdate() {
-        if(!isHurt){
+        if(!isHurt && !isAttack){
             Move();
         }
     }
@@ -67,9 +75,16 @@ public class PlayerController : MonoBehaviour
         if(!isCrouch){
             rb.velocity = new Vector2(inputDirection.x * speed * Time.deltaTime,rb.velocity.y);
         }
-        
+        int faceDir = (int)transform.localScale.x;
+        if(inputDirection.x > 0){
+            faceDir = 1;
+        }
+        if(inputDirection.x < 0){
+            faceDir = -1;
+        }
+
         //人物翻转
-        transform.localScale = new Vector3(inputDirection.x > 0 ? 1 : -1, 1, 1);
+        transform.localScale = new Vector3(faceDir, 1, 1);
 
         //下蹲
         if(inputDirection.y < -0.5 && physicsCheck.isGround){
@@ -106,6 +121,17 @@ public class PlayerController : MonoBehaviour
     {
         isDead = true;
         inputControl.Gameplay.Disable();
+    }
+
+    private void PlayerAttack(InputAction.CallbackContext context)
+    {
+        Debug.Log("Attack");
+        playerAnimation.PlayAttack();
+        isAttack = true;
+    }
+
+    private void CheckState(){
+        capsuleCollider2D.sharedMaterial = physicsCheck.isGround ? normal : wall;
     }
 
     private void OnDisable() {
