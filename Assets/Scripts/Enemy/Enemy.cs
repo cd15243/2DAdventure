@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D),typeof(Animator),typeof(PhysicsCheck))]
 public class Enemy : MonoBehaviour
 {
-    Rigidbody2D rb;
+    public Rigidbody2D rb;
     [HideInInspector]public Animator anim;
     [HideInInspector]public PhysicsCheck physicsCheck;
     [Header("基本变量")]
@@ -30,10 +31,12 @@ public class Enemy : MonoBehaviour
     public bool isDead;
     public float lostTime;
     public float lostTimeCounter;
+    public Vector3 spwanPoint;
 
     private BaseState currentState;
     protected BaseState patrolState;
     protected BaseState chaseState;
+    protected BaseState skillState;
 
     protected virtual void Awake() {
         rb = GetComponent<Rigidbody2D>();
@@ -41,6 +44,8 @@ public class Enemy : MonoBehaviour
         physicsCheck = GetComponentInChildren<PhysicsCheck>();
         currentSpeed = normalSpeed;
         waitCounter = waitTime;
+
+        spwanPoint = transform.position;
     }
 
     private void OnEnable() {
@@ -55,10 +60,10 @@ public class Enemy : MonoBehaviour
     }
 
     private void FixedUpdate() {
+        currentState.PhysicsUpdate();
         if(!isHurt && !isDead && !wait){
             Move();
         }
-        currentState.PhysicsUpdate();
     }
 
     private void OnDisable() {
@@ -66,7 +71,9 @@ public class Enemy : MonoBehaviour
     }
 
     public virtual void Move(){
-        rb.velocity = new Vector2(currentSpeed * faceDir.x * Time.deltaTime, rb.velocity.y);
+        if(!anim.GetCurrentAnimatorStateInfo(0).IsName("snallPreMove") && !anim.GetCurrentAnimatorStateInfo(0).IsName("snallRecover")){
+            rb.velocity = new Vector2(currentSpeed * faceDir.x * Time.deltaTime, rb.velocity.y);
+        }
     }
 
     public void TimeCounter(){
@@ -82,12 +89,12 @@ public class Enemy : MonoBehaviour
         if(!FoundPlayer() && lostTimeCounter >= 0){
             lostTimeCounter -= Time.deltaTime;
         }
-        // else{
-        //     lostTimeCounter = lostTime;
-        // }
+        else if (FoundPlayer()){
+            lostTimeCounter = lostTime;
+        }
     }
 
-    public bool FoundPlayer(){
+    public virtual bool FoundPlayer(){
         return Physics2D.BoxCast(transform.position + (Vector3)centerOffset,checkSize,0,faceDir,checkDistance,attackLayer);
     }
 
@@ -96,12 +103,17 @@ public class Enemy : MonoBehaviour
         {
             NPCState.Patrol => patrolState,
             NPCState.Chase => chaseState,
+            NPCState.Skill => skillState,
             _ => patrolState
         };
 
         currentState.OnExit();
         currentState = newState;
         currentState.OnEnter(this);
+    }
+
+    public virtual Vector3 GetNewPoint(){
+        return transform.position;
     }
 
     public void OnTakeDamage(Transform attackTrans){
@@ -137,7 +149,7 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void OnDrawGizmosSelected() {
+    public virtual void OnDrawGizmosSelected() {
         Gizmos.DrawWireSphere(transform.position + (Vector3)centerOffset + new Vector3(checkDistance * (-transform.localScale.x),0),0.2f);
     }
 }

@@ -9,7 +9,7 @@ public class Character : MonoBehaviour
     public float currentHealth;
     [Header("受伤无敌")]
     public float invincibleDuration;
-    private float invincibleCounter;
+    public float invincibleCounter;
     public bool isInvincible;
     public UnityEvent<Transform> OnTakeDamage;
     public UnityEvent OnDead;

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\HighestLevel\\Unity Projects\\2DAdventure\\Assembly-CSharp.csproj": {}
+    "C:\\HighestLevel\\Unity Projects\\2DAdventure\\Assembly-CSharp.csproj": {}
   },
   "projects": {
-    "c:\\HighestLevel\\Unity Projects\\2DAdventure\\Assembly-CSharp.csproj": {
+    "C:\\HighestLevel\\Unity Projects\\2DAdventure\\Assembly-CSharp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\HighestLevel\\Unity Projects\\2DAdventure\\Assembly-CSharp.csproj",
+        "projectUniqueName": "C:\\HighestLevel\\Unity Projects\\2DAdventure\\Assembly-CSharp.csproj",
         "projectName": "Assembly-CSharp",
-        "projectPath": "c:\\HighestLevel\\Unity Projects\\2DAdventure\\Assembly-CSharp.csproj",
+        "projectPath": "C:\\HighestLevel\\Unity Projects\\2DAdventure\\Assembly-CSharp.csproj",
         "packagesPath": "C:\\Users\\JJ\\.nuget\\packages\\",
-        "outputPath": "c:\\HighestLevel\\Unity Projects\\2DAdventure\\obj\\",
+        "outputPath": "C:\\HighestLevel\\Unity Projects\\2DAdventure\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\JJ\\AppData\\Roaming\\NuGet\\NuGet.Config"
