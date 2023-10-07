@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,9 +13,11 @@ public class Character : MonoBehaviour
     public float invincibleCounter;
     public bool isInvincible;
     public UnityEvent<Transform> OnTakeDamage;
+    public UnityEvent<Character> OnHealthChange;
     public UnityEvent OnDead;
     private void Start() {
         currentHealth = maxHealth;
+        OnHealthChange?.Invoke(this);
     }
     private void Update() {
         invincibleCounter -= Time.deltaTime;
@@ -35,6 +38,8 @@ public class Character : MonoBehaviour
             currentHealth = 0;
             OnDead?.Invoke();
         }
+
+        OnHealthChange?.Invoke(this);
     }
 
     public void TriggerInvulnerable(){
