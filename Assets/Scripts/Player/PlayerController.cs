@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     [Header("基本参数")]
     public float speed;
     public float jumpForce;
+    public float wallJumpForce;
     private float runSpeed;
     private float walkSpeed => speed/2.5f;
     public bool isCrouch;
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviour
     public bool isDead;
     public bool isAttack;
     public float hurtForce;
+    public bool wallJump;
     private Vector2 originalOffset;
     private Vector2 originalSize;
 
@@ -72,7 +74,7 @@ public class PlayerController : MonoBehaviour
     }
 
     public void Move(){
-        if(!isCrouch){
+        if(!isCrouch && !wallJump){
             rb.velocity = new Vector2(inputDirection.x * speed * Time.deltaTime,rb.velocity.y);
         }
         int faceDir = (int)transform.localScale.x;
@@ -116,6 +118,10 @@ public class PlayerController : MonoBehaviour
         if(physicsCheck.isGround){
             rb.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
         }
+        else if(physicsCheck.isOnWall){
+            rb.AddForce(new Vector2(-inputDirection.x,2f) * wallJumpForce, ForceMode2D.Impulse);
+            wallJump = true;
+        }
     }
     public void PlayerDead()
     {
@@ -134,6 +140,17 @@ public class PlayerController : MonoBehaviour
 
     private void CheckState(){
         capsuleCollider2D.sharedMaterial = physicsCheck.isGround ? normal : wall;
+
+        if(physicsCheck.isOnWall){
+            rb.velocity = new Vector2(rb.velocity.x,rb.velocity.y/2f);
+        }
+        else{
+            rb.velocity = new Vector2(rb.velocity.x,rb.velocity.y);
+        }
+
+        if(wallJump && rb.velocity.y < 0){
+            wallJump = false;
+        }
     }
 
     private void OnDisable() {
