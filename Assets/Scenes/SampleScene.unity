@@ -640,6 +640,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 30
   currentHealth: 0
+  maxPower: 0
+  currentPower: 0
+  powerRecoverSpeed: 0
   invincibleDuration: 0.1
   invincibleCounter: 0
   isInvincible: 0
@@ -1290,6 +1293,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 18
   currentHealth: 0
+  maxPower: 0
+  currentPower: 0
+  powerRecoverSpeed: 0
   invincibleDuration: 1
   invincibleCounter: 0
   isInvincible: 0
@@ -2152,6 +2158,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 50
   currentHealth: 0
+  maxPower: 0
+  currentPower: 0
+  powerRecoverSpeed: 0
   invincibleDuration: 0.2
   invincibleCounter: 0
   isInvincible: 0
@@ -4610,6 +4619,10 @@ MonoBehaviour:
   isAttack: 0
   hurtForce: 8
   wallJump: 0
+  isSlide: 0
+  slideDistance: 4.5
+  slideSpeed: 0.3
+  slidePowerCost: 5
   normal: {fileID: 6200000, guid: 1c299a66d67a46541b1a3ff9697ad4fe, type: 2}
   wall: {fileID: 6200000, guid: 34992fd63f13d584eb943497b968fbc9, type: 2}
 --- !u!114 &1038405433
@@ -4684,6 +4697,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 11
   currentHealth: 0
+  maxPower: 15
+  currentPower: 0
+  powerRecoverSpeed: 1.2
   invincibleDuration: 2
   invincibleCounter: 0
   isInvincible: 0

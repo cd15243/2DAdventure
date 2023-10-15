@@ -23,8 +23,14 @@ public class PlayerController : MonoBehaviour
     public bool isAttack;
     public float hurtForce;
     public bool wallJump;
+    public bool isSlide;
     private Vector2 originalOffset;
     private Vector2 originalSize;
+    public float slideDistance;
+    public float slideSpeed;
+    public int slidePowerCost;
+
+    private Character character;
 
     public PhysicsMaterial2D normal;
     public PhysicsMaterial2D wall;
@@ -35,6 +41,7 @@ public class PlayerController : MonoBehaviour
         inputControl = new PlayerInputControl();
         capsuleCollider2D = GetComponent<CapsuleCollider2D>();
         playerAnimation = GetComponent<PlayerAnimation>();
+        character = GetComponent<Character>();
         originalOffset = capsuleCollider2D.offset;
         originalSize = capsuleCollider2D.size;
 
@@ -55,6 +62,8 @@ public class PlayerController : MonoBehaviour
 #endregion
     
         inputControl.Gameplay.Attack.started += PlayerAttack;
+
+        inputControl.Gameplay.Slide.started += PlayerSlide;
     }
 
     private void OnEnable() {
@@ -117,6 +126,9 @@ public class PlayerController : MonoBehaviour
     {
         if(physicsCheck.isGround){
             rb.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
+
+            isSlide = false;
+            StopAllCoroutines();
         }
         else if(physicsCheck.isOnWall){
             rb.AddForce(new Vector2(-inputDirection.x,2f) * wallJumpForce, ForceMode2D.Impulse);
@@ -136,6 +148,39 @@ public class PlayerController : MonoBehaviour
         }
         playerAnimation.PlayAttack();
         isAttack = true;
+    }
+
+    private void PlayerSlide(InputAction.CallbackContext context)
+    {
+        if(!isSlide && physicsCheck.isGround && character.currentPower >= slidePowerCost){
+            isSlide = true;
+
+            var targetPos = new Vector3(transform.position.x + slideDistance * transform.localScale.x,transform.position.y);
+            gameObject.layer = LayerMask.NameToLayer("Enemy");
+            StartCoroutine(TriggerSlide(targetPos));
+
+            character.OnSlide(slidePowerCost);
+        }
+    }
+
+    private IEnumerator TriggerSlide(Vector3 target){
+        do{
+            yield return null;
+            if(!physicsCheck.isGround){
+                break;
+            }
+
+            if(physicsCheck.isTouchLeftWall && transform.localScale.x < 0f || physicsCheck.isTouchRightWall && transform.localScale.x > 0f){
+                isSlide = false;
+                yield break;
+            }
+
+            rb.MovePosition(new Vector3(transform.position.x + slideSpeed * transform.localScale.x,transform.position.y));
+        }
+        while(Mathf.Abs(transform.position.x - target.x) > 0.1f);
+
+        isSlide = false;
+        gameObject.layer = LayerMask.NameToLayer("Player");
     }
 
     private void CheckState(){

@@ -8,6 +8,9 @@ public class Character : MonoBehaviour
     [Header("基本属性")]
     public float maxHealth;
     public float currentHealth;
+    public float maxPower;
+    public float currentPower;
+    public float powerRecoverSpeed;
     [Header("受伤无敌")]
     public float invincibleDuration;
     public float invincibleCounter;
@@ -17,12 +20,18 @@ public class Character : MonoBehaviour
     public UnityEvent OnDead;
     private void Start() {
         currentHealth = maxHealth;
+        currentPower = maxPower;
         OnHealthChange?.Invoke(this);
     }
     private void Update() {
         invincibleCounter -= Time.deltaTime;
         if(invincibleCounter <= 0){
             isInvincible = false;
+        }
+        
+        if(currentPower < maxPower){
+            currentPower += powerRecoverSpeed * Time.deltaTime;
+            // OnHealthChange?.Invoke(this);
         }
     }
     public void TakeDamage(Attack attacker){
@@ -47,5 +56,10 @@ public class Character : MonoBehaviour
             isInvincible = true;
             invincibleCounter = invincibleDuration;
         }
+    }
+
+    public void OnSlide(float cost){
+        currentPower -= cost;
+        OnHealthChange?.Invoke(this);
     }
 }
